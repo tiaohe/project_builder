@@ -3,6 +3,15 @@
 version = 3
 
 [[package]]
+name = "aspect_macro"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "builder_macro"
 version = "0.1.0"
 dependencies = [
@@ -23,6 +32,7 @@ dependencies = [
 name = "project"
 version = "0.1.0"
 dependencies = [
+ "aspect_macro",
  "builder_macro",
 ]
 

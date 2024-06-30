@@ -5,3 +5,4 @@ edition = "2021"
 
 [dependencies]
 builder_macro = { path = "../builder_macro" }
+aspect_macro = { path = "../aspect_macro" }

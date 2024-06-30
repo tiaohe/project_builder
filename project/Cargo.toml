@@ -1,0 +1,7 @@
+[package]
+name = "project"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+builder_macro = { path = "../builder_macro" }

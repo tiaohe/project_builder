@@ -21,7 +21,7 @@ cargo build
 接下来，进入 my_project 目录并构建它：
 
 ```bash
-cd ../my_project
+cd ../project
 cargo build
 ```
 用法

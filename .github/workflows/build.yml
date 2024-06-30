@@ -2,69 +2,64 @@ name: Rust CI
 
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
   pull_request:
-    branches:
-      - master
+    branches: [ master ]
 
 jobs:
-  build-aspect_macro:
+  check-macros-fmt:
+    name: Check Macro Libraries Formatting
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dir: [builder_macro, aspect_macro]
     steps:
       - uses: actions/checkout@v3
+      - name: Set up Rust
+        uses: hecrj/setup-rust-action@v1
         with:
-          fetch-depth: 0
-          path: aspect_macro
+          rust-version: stable
+          components: rustfmt
+      - name: Check Macro Library Formatting
+        run: cargo fmt --manifest-path ${{ matrix.dir }}/Cargo.toml --all -- --check
+        working-directory: ./
 
-      - name: Install Rust
-        run: rustup toolchain install stable --component llvm-tools-preview
-        working-directory: aspect_macro
-
-      - name: Check code format for aspect_macro
-        run: cargo fmt --all -- --check
-        working-directory: aspect_macro
-
-      - name: Build and check aspect_macro
-        run: cargo build --all
-        working-directory: aspect_macro
-
-  build-builder_macro:
+  check-project-fmt:
+    name: Check Project Formatting
     runs-on: ubuntu-latest
+    needs: check-macros-fmt
     steps:
       - uses: actions/checkout@v3
+      - name: Set up Rust
+        uses: hecrj/setup-rust-action@v1
         with:
-          fetch-depth: 0
-          path: builder_macro
-
-      - name: Install Rust
-        run: rustup toolchain install stable --component llvm-tools-preview
-        working-directory: builder_macro
-
-      - name: Check code format for builder_macro
+          rust-version: stable
+          components: rustfmt
+      - name: Check Project Formatting
         run: cargo fmt --all -- --check
-        working-directory: builder_macro
-
-      - name: Build and check builder_macro
-        run: cargo build --all
-        working-directory: builder_macro
+        working-directory: ./project
 
   build-project:
+    name: Build and Test Project
     runs-on: ubuntu-latest
+    needs: check-project-fmt
     steps:
       - uses: actions/checkout@v3
+      - name: Set up Rust
+        uses: hecrj/setup-rust-action@v1
         with:
-          fetch-depth: 0
-          path: project
-
-      - name: Install Rust
-        run: rustup toolchain install stable --component llvm-tools-preview
-        working-directory: project
-
-      - name: Check code format for project
-        run: cargo fmt --all -- --check
-        working-directory: project
-
-      - name: Build and check project
-        run: cargo build --all
-        working-directory: project
+          rust-version: stable
+      - name: Cache cargo registry
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry  
+            ~/.cargo/git  
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Build Project
+        run: cargo build
+        working-directory: ./project
+      - name: Run Tests
+        run: cargo test
+        working-directory: ./project

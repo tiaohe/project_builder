@@ -2,7 +2,7 @@
 
 这是一个使用 Rust 的过程宏生成 Builder 模式代码的示例项目。该项目包括两个库：
 - `builder_macro`：定义过程宏以生成 Builder 模式代码。
-- `my_project`：使用 `builder_macro` 库定义结构体并进行测试。
+- `project`：使用 `builder_macro` 库定义结构体并进行测试。
 
 ## 安装
 

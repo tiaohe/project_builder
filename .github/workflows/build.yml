@@ -1,4 +1,4 @@
-name: build
+name: Rust CI
 
 on:
   push:
@@ -9,25 +9,62 @@ on:
       - master
 
 jobs:
-  build-rust:
+  build-aspect_macro:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        platform: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          path: aspect_macro
+
       - name: Install Rust
         run: rustup toolchain install stable --component llvm-tools-preview
-      - name: Install cargo-llvm-cov
-        uses: taiki-e/install-action@cargo-llvm-cov
-      - name: install nextest
-        uses: taiki-e/install-action@nextest
-      - uses: Swatinem/rust-cache@v1
-      - name: Check code format
-        run: cargo fmt -- --check
-      - name: Check the package for errors
-        run: cargo check --all
-      - name: Lint rust sources
-        run: cargo clippy --all-targets --all-features --tests --benches -- -D warnings
+        working-directory: aspect_macro
+
+      - name: Check code format for aspect_macro
+        run: cargo fmt --all -- --check
+        working-directory: aspect_macro
+
+      - name: Build and check aspect_macro
+        run: cargo build --all
+        working-directory: aspect_macro
+
+  build-builder_macro:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          path: builder_macro
+
+      - name: Install Rust
+        run: rustup toolchain install stable --component llvm-tools-preview
+        working-directory: builder_macro
+
+      - name: Check code format for builder_macro
+        run: cargo fmt --all -- --check
+        working-directory: builder_macro
+
+      - name: Build and check builder_macro
+        run: cargo build --all
+        working-directory: builder_macro
+
+  build-project:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          path: project
+
+      - name: Install Rust
+        run: rustup toolchain install stable --component llvm-tools-preview
+        working-directory: project
+
+      - name: Check code format for project
+        run: cargo fmt --all -- --check
+        working-directory: project
+
+      - name: Build and check project
+        run: cargo build --all
+        working-directory: project

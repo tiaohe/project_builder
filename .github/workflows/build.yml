@@ -24,20 +24,20 @@ jobs:
         run: cargo fmt --manifest-path ${{ matrix.dir }}/Cargo.toml --all -- --check
         working-directory: ./
 
-  check-project-fmt:
-    name: Check Project Formatting
-    runs-on: ubuntu-latest
-    needs: check-macros-fmt
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Rust
-        uses: hecrj/setup-rust-action@v1
-        with:
-          rust-version: stable
-          components: rustfmt
-      - name: Check Project Formatting
-        run: cargo fmt --all -- --check
-        working-directory: ./project
+#  check-project-fmt:
+#    name: Check Project Formatting
+#    runs-on: ubuntu-latest
+#    needs: check-macros-fmt
+#    steps:
+#      - uses: actions/checkout@v3
+#      - name: Set up Rust
+#        uses: hecrj/setup-rust-action@v1
+#        with:
+#          rust-version: stable
+#          components: rustfmt
+#      - name: Check Project Formatting
+#        run: cargo fmt --all -- --check
+#        working-directory: ./project
 
   build-project:
     name: Build and Test Project

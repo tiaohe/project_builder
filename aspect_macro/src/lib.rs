@@ -1,6 +1,6 @@
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{parse_macro_input, parse::Parse, parse::ParseStream, ItemFn, LitStr, Result};
+use syn::{parse::Parse, parse::ParseStream, parse_macro_input, ItemFn, LitStr, Result};
 
 #[derive(Debug)]
 enum Aop {
@@ -29,9 +29,7 @@ struct AopArgs {
 impl Parse for AopArgs {
     fn parse(input: ParseStream) -> Result<Self> {
         let mode: LitStr = input.parse()?;
-        Ok(AopArgs {
-            mode: mode.value(),
-        })
+        Ok(AopArgs { mode: mode.value() })
     }
 }
 

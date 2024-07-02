@@ -23,7 +23,12 @@ pub struct Company {
 
 impl Company {
     pub fn new(name: String, founded: u32, ceo: String, employees: usize, founder: Person) -> Self {
-        Company { name, founded, ceo, employees, founder }
+        Company {
+            name,
+            founded,
+            ceo,
+            employees,
+            founder,
+        }
     }
 }
-

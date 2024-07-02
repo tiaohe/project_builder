@@ -1,13 +1,37 @@
-use project::Person;
+use actix_web::{error, get, middleware::Logger, App, HttpServer, Result};
+use derive_more::{Display, Error};
+use log::info;
 
-fn main() {
-    let person_new = Person::new("Alice".to_string(), 99);
-    let person_builder = Person::builder()
-        .name("Alice".to_string())
-        .age(99)
-        .build()
-        .unwrap();
+#[derive(Debug, Display, Error)]
+#[display(fmt = "my error: {}", name)]
+pub struct MyError {
+    name: &'static str,
+}
 
-    println!("Person created with new: {:?}", person_new);
-    println!("Person created with builder: {:?}", person_builder);
+impl error::ResponseError for MyError {}
+
+#[get("/")]
+async fn index() -> Result<&'static str, MyError> {
+    let err = MyError { name: "test error" };
+    info!("{}", err);
+    Err(err)
+}
+
+#[rustfmt::skip]
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    std::env::set_var("RUST_LOG", "info");
+    std::env::set_var("RUST_BACKTRACE", "1");
+    env_logger::init();
+
+    HttpServer::new(|| {
+        let logger = Logger::default();
+
+        App::new()
+            .wrap(logger)
+            .service(index)
+    })
+        .bind(("127.0.0.1", 8080))?
+        .run()
+        .await
 }

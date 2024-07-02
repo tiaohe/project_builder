@@ -11,7 +11,10 @@ mod tests {
             .build()
             .unwrap();
 
-        assert_eq!(person_new, person_builder, "Person created with new should be equal to person created with builder");
+        assert_eq!(
+            person_new, person_builder,
+            "Person created with new should be equal to person created with builder"
+        );
     }
 
     #[test]
@@ -34,10 +37,14 @@ mod tests {
             .build()
             .unwrap();
 
-        assert_eq!(company_new, company_builder, "Company created with new should be equal to company created with builder");
+        assert_eq!(
+            company_new, company_builder,
+            "Company created with new should be equal to company created with builder"
+        );
     }
 
     use aspect_macro::elapsed;
+
     #[elapsed("Pre")]
     #[test]
     fn test_function_pre() {
@@ -65,8 +72,4 @@ mod tests {
         println!("Inside test function all");
         std::thread::sleep(std::time::Duration::from_secs(1));
     }
-
-
-
-
 }

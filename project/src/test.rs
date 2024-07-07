@@ -1,4 +1,4 @@
-#[cfg(test)]
+#[cfg(all(test, not(target_arch = "skip_tests")))]
 mod tests {
     use crate::{Company, Person};
 

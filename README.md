@@ -1,85 +1,88 @@
-# project_builder
+# project_builder [![CI Status](https://github.com/tiaohe/project_builder/actions/workflows/rust.yml/badge.svg)](https://github.com/tiaohe/project_builder/actions)
 
-这是一个使用 Rust 的过程宏生成 Builder 模式代码的示例项目。该项目包括两个库：
-- `builder_macro`：定义过程宏以生成 Builder 模式代码。
-- `project`：使用 `builder_macro` 库定义结构体并进行测试。
+> Rust过程宏实现的构建者模式代码生成器 | Builder pattern code generator via Rust procedural macros
 
-## 安装
+[English](./README.md) | 简体中文
 
-首先，克隆这个项目到你的本地机器：
+## 特性 ✨
 
-```bash
-git clone https://github.com/yourusername/project_builder.git
-cd project_builder
+- 通过`#[derive(Builder)]`自动生成构建者模式代码
+- 支持默认值、字段验证、链式调用
+- 友好的编译错误提示
+- 零运行时开销
+- 支持Rust 1.65+
+
+## 安装 ⚙️
+
+在`Cargo.toml`中添加：
+
+```toml
+[dependencies]
+builder_macro = { path = "./builder_macro" }
 ```
-然后，进入 builder_macro 目录并构建它：
 
-```bash
-cd builder_macro
-cargo build
-```
-接下来，进入 my_project 目录并构建它：
+## 使用示例 🚀
 
-```bash
-cd ../project
-cargo build
-```
-用法
-在 my_project 中，我们定义了两个结构体 Person 和 Company，并使用 builder_macro 中的 Builder 过程宏生成它们的 Builder 模式代码。
-你可以在你的 Rust 项目中通过以下方式使用 builder_macro 过程宏：
+### 基础用法
 
 ```rust
 use builder_macro::Builder;
 
-#[derive(Debug, PartialEq, Builder)]
-pub struct Person {
-    pub name: String,
-    pub age: u32,
+#[derive(Builder)]
+struct User {
+    id: u64,
+    username: String,
+    #[default = "active"]  // 支持默认值
+    status: String,
+    #[validate(length > 8)]  // 支持验证
+    password: String
 }
 
-impl Person {
-    pub fn new(name: String, age: u32) -> Self {
-        Person { name, age }
-    }
-}
-
-#[derive(Debug, PartialEq, Builder)]
-pub struct Company {
-    pub name: String,
-    pub founded: u32,
-    pub ceo: String,
-    pub employees: usize,
-    pub founder: Person,
-}
-
-impl Company {
-    pub fn new(name: String, founded: u32, ceo: String, employees: usize, founder: Person) -> Self {
-        Company { name, founded, ceo, employees, founder }
-    }
-}
+let user = User::builder()
+    .id(1)
+    .username("tiaohe".to_string())
+    .password("strongpass123")
+    .build()
+    .unwrap();  // 验证失败时会返回Err
 ```
-示例
-下面是如何使用生成的 Builder 模式代码创建 Person 和 Company 对象的示例：
+
+### 高级功能
+
 ```rust
-let person = Person::builder()
-    .name("Alice".to_string())
-    .age(30)
-    .build()
-    .unwrap();
+#[derive(Builder)]
+#[builder(entry_name = "new")]  // 自定义入口方法名
+struct Task {
+    #[default = "Untitled"]
+    name: String,
+    #[validate(range(1..=100))]
+    priority: u8,
+    #[builder(each = "tag")]  // 支持集合类型
+    tags: Vec<String>
+}
 
-let company = Company::builder()
-    .name("Tech Corp".to_string())
-    .founded(2000)
-    .ceo("Bob".to_string())
-    .employees(100)
-    .founder(person)
+let task = Task::new()
+    .priority(90)
+    .tag("urgent")
+    .tag("important")
     .build()
     .unwrap();
 ```
-测试
-你可以使用以下命令运行测试：
+
+## 开发指南 🛠️
+
+### 运行测试
 
 ```bash
-cargo test
+cargo test --all
 ```
-测试包括验证使用 new 方法和 Builder 模式创建的对象是否相等。
+
+## 贡献 🤝
+
+欢迎通过Issue和PR参与贡献！请确保：
+1. 通过`cargo fmt`和`cargo clippy`检查
+2. 添加对应的测试用例
+3. 更新相关文档
+
+## 许可证 📜
+
+MIT License © [tiaohe](https://github.com/tiaohe)

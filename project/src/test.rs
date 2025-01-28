@@ -21,7 +21,8 @@ mod tests {
     #[test]
     fn test_company_new_vs_builder() {
         let founder = Person::new("Alice".to_string(), 30);
-        let company_new = Company::new("Tech Corp".to_string(), 2000, "Bob".to_string(), 100, founder.clone());
+        let company_new =
+            Company::new("Tech Corp".to_string(), 2000, "Bob".to_string(), 100, founder.clone());
 
         let company_builder = Company::builder()
             .name("Tech Corp".to_string())

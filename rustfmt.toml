@@ -1,0 +1,25 @@
+# 基础格式配置
+max_width = 100           # 比默认值稍宽以适应宏代码
+tab_spaces = 4
+hard_tabs = false
+error_on_line_overflow = true
+
+# 宏专用配置
+format_macro_matchers = true
+format_macro_bodies = true
+overflow_delimited_expr = true
+
+# 链式调用优化
+chain_width = 80
+brace_style = "SameLineWhere"
+indent_style = "Block"
+
+# 注释和文档
+wrap_comments = true
+comment_width = 80
+format_code_in_doc_comments = true
+
+# 其他重要设置
+reorder_imports = true
+reorder_modules = true
+group_imports = "StdExternalCrate"

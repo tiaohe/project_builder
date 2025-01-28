@@ -26,7 +26,6 @@ impl BankAccount {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -54,7 +53,4 @@ mod tests {
         let result = account.withdraw(150.0);
         assert!(result.is_err());
     }
-
 }
-
-

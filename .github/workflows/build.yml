@@ -12,54 +12,62 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dir: [builder_macro, aspect_macro]
+        dir: ['builder_macro', 'aspect_macro']
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Rust
-        uses: hecrj/setup-rust-action@v1
+      - name: Setup Nightly Rust
+        uses: dtolnay/rust-toolchain@master
         with:
-          rust-version: stable
+          toolchain: nightly
           components: rustfmt
-      - name: Check Macro Library Formatting
-        run: cargo fmt --manifest-path ${{ matrix.dir }}/Cargo.toml --all -- --check
-        working-directory: ./
+      - name: Check Macro Formatting
+        run: |
+          cd ${{ matrix.dir }}
+          cargo fmt --all -- --check
+        env:
+          RUSTFMT_UNSTABLE: 1
 
-#  check-project-fmt:
-#    name: Check Project Formatting
-#    runs-on: ubuntu-latest
-#    needs: check-macros-fmt
-#    steps:
-#      - uses: actions/checkout@v3
-#      - name: Set up Rust
-#        uses: hecrj/setup-rust-action@v1
-#        with:
-#          rust-version: stable
-#          components: rustfmt
-#      - name: Check Project Formatting
-#        run: cargo fmt --all -- --check
-#        working-directory: ./project
+  check-project-fmt:
+    name: Check Project Formatting
+    runs-on: ubuntu-latest
+    needs: check-macros-fmt
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: nightly
+          components: rustfmt
+      - name: Check Project Format
+        run: cargo fmt --all -- --check
+        working-directory: ./project
+        env:
+          RUSTFMT_UNSTABLE: 1
 
-  build-project:
-    name: Build and Test Project
+  build-and-test:
+    name: Build and Test
     runs-on: ubuntu-latest
     needs: check-project-fmt
+    strategy:
+      matrix:
+        project: ['project', 'builder_macro', 'aspect_macro']
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Rust
-        uses: hecrj/setup-rust-action@v1
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@master
         with:
-          rust-version: stable
-      - name: Cache cargo registry
+          toolchain: stable
+      - name: Cache Dependencies
         uses: actions/cache@v3
         with:
           path: |
-            ~/.cargo/registry  
-            ~/.cargo/git  
+            ~/.cargo/registry
+            ~/.cargo/git
             target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - name: Build Project
-        run: cargo build
-        working-directory: ./project
+        run: cargo build --verbose
+        working-directory: ./${{ matrix.project }}
       - name: Run Tests
-        run: cargo test
-        working-directory: ./project
+        run: cargo test --verbose
+        working-directory: ./${{ matrix.project }}

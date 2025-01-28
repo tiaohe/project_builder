@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "aspect_macro",
+    "builder_macro",
+]
+resolver = "2"

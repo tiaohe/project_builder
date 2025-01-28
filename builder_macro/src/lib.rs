@@ -24,14 +24,20 @@ pub fn builder_derive(input: TokenStream) -> TokenStream {
         }
 
         impl #builder_name {
-            #(pub fn #field_names(mut self, value: #field_types) -> Self {
-                self.#field_names = Some(value);
-                self
-            })*
+            #(
+                pub fn #field_names(mut self, value: #field_types) -> Self {
+                    self.#field_names = Some(value);
+                    self
+                }
+            )*
 
             pub fn build(self) -> Result<#name, String> {
                 Ok(#name {
-                    #(#field_names: self.#field_names.ok_or_else(|| format!("Field {} is not set", stringify!(#field_names)))?,)*
+                    #(
+                        #field_names: self
+                            .#field_names
+                            .ok_or_else(|| format!("Field {} is not set", stringify!(#field_names)))?,
+                    )*
                 })
             }
         }

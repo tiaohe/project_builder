@@ -1,25 +1,27 @@
-# 基础格式配置
-max_width = 100           # 比默认值稍宽以适应宏代码
+# rustfmt.toml (修正版本)
+# 基础配置
+max_width = 100
 tab_spaces = 4
 hard_tabs = false
-error_on_line_overflow = true
 
-# 宏专用配置
-format_macro_matchers = true
-format_macro_bodies = true
+# 大括号样式修正
+brace_style = "SameLineWhere"  # 使用有效选项替代 SameLine
+control_brace_style = "AlwaysSameLine"
+
+# 链式调用优化配置
+chain_width = 80
+fn_call_width = 80
+indent_style = "Block"
 overflow_delimited_expr = true
 
-# 链式调用优化
-chain_width = 80
-brace_style = "SameLineWhere"
-indent_style = "Block"
+# 宏相关配置
+format_macro_matchers = true
+format_macro_bodies = true
 
-# 注释和文档
+# 其他有效配置
+reorder_imports = true
+group_imports = "StdExternalCrate"
 wrap_comments = true
 comment_width = 80
-format_code_in_doc_comments = true
 
-# 其他重要设置
-reorder_imports = true
-reorder_modules = true
-group_imports = "StdExternalCrate"
+    # 使用块状缩进风格

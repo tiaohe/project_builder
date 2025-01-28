@@ -1,6 +1,8 @@
 [workspace]
 members = [
-    "aspect_macro",
-    "builder_macro",
+    "project",          # 主项目
+    "builder_macro",    # 宏项目1
+    "aspect_macro"      # 宏项目2
 ]
 resolver = "2"
+exclude = []            # 显式声明排除项

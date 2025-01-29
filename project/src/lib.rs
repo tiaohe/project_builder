@@ -1,5 +1,4 @@
-mod struct_demo;
-mod test;
+mod r#struct;
 mod test_tdd;
 
-pub use struct_demo::*;
+pub use r#struct::*;

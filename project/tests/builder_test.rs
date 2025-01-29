@@ -1,3 +1,5 @@
+use ::project::{Company, Person};
+
 #[cfg(all(test, not(target_arch = "skip_tests")))]
 mod tests {
     use crate::{Company, Person};
@@ -37,35 +39,5 @@ mod tests {
             company_new, company_builder,
             "Company created with new should be equal to company created with builder"
         );
-    }
-
-    use aspect_macro::elapsed;
-
-    #[elapsed("Pre")]
-    #[test]
-    fn test_function_pre() {
-        println!("Inside test function pre");
-        std::thread::sleep(std::time::Duration::from_secs(1));
-    }
-
-    #[elapsed("Post")]
-    #[test]
-    fn test_function_post() {
-        println!("Inside test function post");
-        std::thread::sleep(std::time::Duration::from_secs(1));
-    }
-
-    #[elapsed("Around")]
-    #[test]
-    fn test_function_around() {
-        println!("Inside test function around");
-        std::thread::sleep(std::time::Duration::from_secs(1));
-    }
-
-    #[elapsed("All")]
-    #[test]
-    fn test_function_all() {
-        println!("Inside test function all");
-        std::thread::sleep(std::time::Duration::from_secs(1));
     }
 }

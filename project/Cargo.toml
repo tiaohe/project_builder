@@ -6,13 +6,11 @@ edition = "2021"
 [dependencies]
 builder_macro = { path = "../builder_macro" }
 aspect_macro = { path = "../aspect_macro" }
+lazy_static = "1.5.0"
+tokio = { version = "1.43.0", features = ["time"] }
+tracing-test = "0.2.5"
+gag = "1.0.0"
+tracing = "0.1.41"
 
-actix-web = "4.8.0"
-serde = { version = "1.0.203", features = ["derive"] }
-env_logger = "0.11.3"
-log = "0.4.22"
-derive_more = "0.99.18"
-futures = "0.3.30"
-redis = "0.24"
-tokio = { version = "1.38.0", features = ["rt", "rt-multi-thread", "macros"] }
-anyhow = "1.0.86"
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }

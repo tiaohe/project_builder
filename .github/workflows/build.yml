@@ -68,5 +68,5 @@ jobs:
         run: cargo build --verbose
         working-directory: ./${{ matrix.project }}
       - name: Run Tests
-        run: cargo test --verbose
+        run: cargo tests --verbose
         working-directory: ./${{ matrix.project }}

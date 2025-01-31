@@ -4,9 +4,19 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+gag = "1.0.0"
+lazy_static = "1.5.0"
 proc-macro2 = "1.0.36"
 quote = "1.0.36"
-syn = { version = "2.0.68", features = ["full"] }
+syn = { version = "1.0.109", features = ["full"] }
+tokio = "1.43.0"
+tracing = "0.1.41"
+tracing-subscriber = "0.3.19"
+tracing-test = "0.2.5"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+
 
 [lib]
 proc-macro = true

@@ -73,7 +73,7 @@ let task = Task::new()
 ### 运行测试
 
 ```bash
-cargo test --all
+cargo tests --all
 ```
 
 ## 贡献 🤝

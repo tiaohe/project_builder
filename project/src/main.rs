@@ -16,6 +16,3 @@ fn main() {
     let result = test_function(5, 10);
     println!("Result: {}", result);
 }
-
-
-

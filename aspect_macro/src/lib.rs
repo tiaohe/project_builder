@@ -23,7 +23,8 @@ pub fn get(attr: TokenStream, item: TokenStream) -> TokenStream {
             NestedMeta::Meta(Meta::NameValue(meta)) if meta.path.is_ident("params") => {
                 if let syn::Lit::Str(lit_str) = meta.lit {
                     // 假设参数是以 `key=value` 的形式传递
-                    params = lit_str.value()
+                    params = lit_str
+                        .value()
                         .split(',')
                         .map(|pair| {
                             let mut parts = pair.split('=');
@@ -65,7 +66,6 @@ pub fn get(attr: TokenStream, item: TokenStream) -> TokenStream {
     result.into()
 }
 
-
 #[proc_macro_attribute]
 pub fn loggable(attr: TokenStream, item: TokenStream) -> TokenStream {
     let args = parse_macro_input!(attr as AttributeArgs);
@@ -97,19 +97,28 @@ pub fn loggable(attr: TokenStream, item: TokenStream) -> TokenStream {
     }
 
     // 提取参数名称
-    let arg_names: Vec<String> = func_inputs.iter().filter_map(|arg| {
-        if let syn::FnArg::Typed(pat_type) = arg {
-            if let Pat::Ident(ident) = &*pat_type.pat {
-                return Some(ident.ident.to_string());
+    let arg_names: Vec<String> = func_inputs
+        .iter()
+        .filter_map(|arg| {
+            if let syn::FnArg::Typed(pat_type) = arg {
+                if let Pat::Ident(ident) = &*pat_type.pat {
+                    return Some(ident.ident.to_string());
+                }
             }
-        }
-        None
-    }).collect();
+            None
+        })
+        .collect();
 
     // 构造参数打印代码
     let log_args_code = if log_args {
-        let arg_names_str = arg_names.iter().map(|name| format!("{}={{:?}}", name)).collect::<Vec<_>>().join(", ");
-        let arg_vars = arg_names.iter().map(|name| syn::Ident::new(name, proc_macro2::Span::call_site()));
+        let arg_names_str = arg_names
+            .iter()
+            .map(|name| format!("{}={{:?}}", name))
+            .collect::<Vec<_>>()
+            .join(", ");
+        let arg_vars = arg_names
+            .iter()
+            .map(|name| syn::Ident::new(name, proc_macro2::Span::call_site()));
 
         quote! {
             println!(concat!("Calling function: ", stringify!(#func_name), " with args: ", #arg_names_str), #(#arg_vars, )*);
@@ -140,7 +149,7 @@ pub fn loggable(attr: TokenStream, item: TokenStream) -> TokenStream {
         fn #func_name(#func_inputs) #func_output {
             #log_args_code
             #log_time_code
-            
+
             let result = { #func_block };
 
             #log_time_end_code
@@ -151,4 +160,3 @@ pub fn loggable(attr: TokenStream, item: TokenStream) -> TokenStream {
 
     TokenStream::from(expanded)
 }
-
